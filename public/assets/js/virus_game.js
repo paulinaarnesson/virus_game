@@ -13,7 +13,7 @@ const updateOnlinePlayers = (players) => {
 	document.querySelector('#players').innerHTML = players.map(player => `<li class="player">${player}<span>Your time</span></li>`).join("");
 
 	if(players.length === 2){
-		socket.emit('start-game', (players));
+		socket.emit('start-game');
 	}
 }
 
@@ -33,7 +33,11 @@ player_name_form.addEventListener('submit', e => {
 	});
 });
 
-socket.on('game-started', () => {
+socket.on('game-started', (virusObject) => {
+	setTimeout(() => {
+		virus.classList.remove('hide');
+	}, virusObject.setTime);
+
 	virus.addEventListener('click', () => {
 		socket.emit('compare-click');
 	});

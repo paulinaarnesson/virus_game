@@ -12,15 +12,15 @@ let startTime = null;
  */
 function handleCompareClick() {
 	const clickTime = Date.now();
-	const differenceTime = startTime - clickTime;
-	console.log(`${players[this.id]} managed to click the virus in ${differenceTime} time`);
+	const differenceTime = (clickTime-startTime) / 1000;
+	console.log(`${players[this.id]} managed to click the virus in ${differenceTime} seconds`);
 }
 
 /**
  * Handle user disconnecting
  */
 function handleDisconnect() {
-	debug(`Socket ${this.id} left the chat :(`);
+	debug(`Socket ${players[this.id]} left the game`);
 
 	// broadcast to all connected sockets that this player has left the chat
 	if (players[this.id]) {
@@ -41,7 +41,7 @@ function getOnlinePlayers() {
  * Handle a new player connecting
  */
 function handleRegisterPlayer(player_name, callback) {
-	debug("Player connected to the game", player_name);
+	debug(`${player_name} connected to the game`);
 	players[this.id] = player_name;
 	callback({
 		joinGame: true,
@@ -59,8 +59,13 @@ function handleRegisterPlayer(player_name, callback) {
  * Handle and start the game
  */
 function handleStartGame(){
+	const virusObject = {
+		topCoordinates: Math.random(),
+		leftCoordinates: Math.random(),
+		setTime: Math.floor(Math.random()*10000),
+	}
 	startTime = Date.now();
-	this.emit('game-started');
+	this.emit('game-started', virusObject);
 }
 
 module.exports = function(socket) {
