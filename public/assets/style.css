@@ -1,0 +1,36 @@
+.hide {
+	display: none !important;
+}
+
+.score_paragraph{
+	font-size: 1.2rem;
+	margin-top: 10px;
+}
+
+#game_area{
+	border: 1px solid black;
+	height: 400px;
+	margin: 30px;
+	position: relative;
+	width: 600px;
+}
+
+#score_board{
+	border: 1px solid black;
+	height: 400px;
+	margin: 30px;
+	text-align: center;
+	width: 200px;
+}
+
+#virus_game{
+	display: flex;
+}
+
+img{
+	height: auto;
+	position: absolute;
+	top: 200px;
+	right: 300px;
+	width: 50px;
+}
