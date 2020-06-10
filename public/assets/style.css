@@ -1,3 +1,5 @@
+
+
 .hide {
 	display: none !important;
 }
@@ -23,7 +25,12 @@
 	width: 200px;
 }
 
-#username-form{
+#players{
+	list-style-type: none;
+	padding-inline-start: 0px;
+}
+
+#player_name-form{
 	margin-top: 200px;
 	width: 100%;
 }
