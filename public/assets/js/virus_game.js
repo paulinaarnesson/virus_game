@@ -36,6 +36,8 @@ player_name_form.addEventListener('submit', e => {
 socket.on('game-started', (virusObject) => {
 	setTimeout(() => {
 		virus.classList.remove('hide');
+		virus.style.top = `${virusObject.topCoordinates}px`;
+		virus.style.right = `${virusObject.rightCoordinates}px`;
 	}, virusObject.setTime);
 
 	virus.addEventListener('click', () => {

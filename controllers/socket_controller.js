@@ -60,8 +60,8 @@ function handleRegisterPlayer(player_name, callback) {
  */
 function handleStartGame(){
 	const virusObject = {
-		topCoordinates: Math.random(),
-		leftCoordinates: Math.random(),
+		topCoordinates: Math.floor(Math.random()*(350-0)),//350
+		rightCoordinates: Math.floor(Math.random()*(550-0)),//550
 		setTime: Math.floor(Math.random()*10000),
 	}
 	startTime = Date.now();
