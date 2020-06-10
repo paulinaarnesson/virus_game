@@ -1,4 +1,17 @@
+li{
+	background-color: blanchedalmond;
+	border: 1px solid black;
+	display: flex;
+	flex-direction: column;
+	margin: 5px;
+	padding: 5px;
+}
 
+span{
+	border-top: 1px solid black;
+	margin-top: 5px;
+	padding-top: 5px;
+}
 
 .hide {
 	display: none !important;
