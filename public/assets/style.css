@@ -23,6 +23,11 @@
 	width: 200px;
 }
 
+#username-form{
+	margin-top: 200px;
+	width: 100%;
+}
+
 #virus_game{
 	display: flex;
 }

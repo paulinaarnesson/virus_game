@@ -10,16 +10,18 @@
 </head>
 	<body>
 		<div id="app">
-			<div id="signIn" class="container hide">
+			<div id="sign_in" class="container">
 				<form id="username-form">
-					<div class="form-group">
-						<input type="text" id="username" class="form-control form-control-lg" required placeholder="Choose ">
-					</div>
-
-					<button type="submit" class="btn btn-primary">Connect!</button>
+					<div class="form-group input-group">
+						<input type="text" id="username" class="form-control form-control-lg" required placeholder="Choose nickname">
+						<div class="input-group-append">
+							<button class="input-group-text" id="play_button">Play game!</button>
+						</div>
+					</div><!-- /.form-group -->
 				</form><!-- /#username-form -->
 			</div><!-- /#sign_in -->
-			<div id="wrapper">
+
+			<div id="wrapper" class="hide">
 				<div id="virus_game">
 					<div id="game_area">
 						<img src="./assets/images/virus.svg" alt="Illustration of a virus">
