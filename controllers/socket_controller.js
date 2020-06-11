@@ -4,6 +4,7 @@
 
 const debug = require('debug')('virus_game:socket_controller');
 
+let io = null;
 const players = {};
 let startTime = null;
 
@@ -13,7 +14,10 @@ let startTime = null;
 function handleCompareClick() {
 	const clickTime = Date.now();
 	const differenceTime = (clickTime-startTime) / 1000;
-	console.log(`${players[this.id]} managed to click the virus in ${differenceTime} seconds`);
+
+	const player = players[this.id];
+	console.log(`${player} managed to click the virus in ${differenceTime} seconds`);
+	io.emit('render-time', differenceTime);
 }
 
 /**
@@ -25,10 +29,9 @@ function handleDisconnect() {
 	// broadcast to all connected sockets that this player has left the chat
 	if (players[this.id]) {
 		this.broadcast.emit('player-disconnected', players[this.id]);
+		// remove player from list of connected players
+		delete players[this.id];
 	}
-
-	// remove player from list of connected players
-	delete players[this.id];
 }
 /**
  * Get nicknames of online players
@@ -65,11 +68,13 @@ function handleStartGame(){
 		setTime: Math.floor(Math.random()*10000),
 	}
 	startTime = Date.now();
-	this.emit('game-started', virusObject);
+	io.emit('game-started', virusObject);
 }
 
 module.exports = function(socket) {
 	debug(`Client ${socket.id} connected!`);
+
+	io = this;
 
 	socket.on('compare-click', handleCompareClick);
 

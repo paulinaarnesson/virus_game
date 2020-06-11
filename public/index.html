@@ -15,7 +15,7 @@
 					<div class="form-group input-group">
 						<input type="text" id="player_name" class="form-control form-control-lg" required placeholder="Choose nickname">
 						<div class="input-group-append">
-							<button id="play_button" class="input-group-text" id="play_button">Play game!</button>
+							<button id="play_button" class="input-group-text">Play game!</button>
 						</div>
 					</div><!-- /.form-group -->
 				</form><!-- /#username-form -->
@@ -29,9 +29,11 @@
 					<div id="score_board">
 						<p class="score_paragraph"><strong>Score Board</strong></p>
 						<p>Score</p>
-						<ul id="players">
-
-						</ul>
+						<div id="players">
+							<div id="playerContainer">
+							</div><!-- /#players -->
+							<button id="restartButton" class="btn btn-light">Restart!</button>
+						</div><!-- /#playersContainer -->
 					</div><!-- /#score_board -->
 				</div><!-- /#virus_game -->
 			</div><!-- /#wrapper -->

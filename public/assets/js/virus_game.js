@@ -4,13 +4,24 @@ const player_name_form = document.querySelector('#player_name-form');
 const sign_in = document.querySelector('#sign_in');
 const virus = document.querySelector('#virus');
 const wrapper = document.querySelector('#wrapper');
+const playerContainer = document.querySelector('#playerContainer');
 
 const addPlayerToList = (player) => {
-	document.querySelector('#players').innerHTML += `<li id="player">${player}<span>Your time</span></li>`;
+	playerContainer.innerHTML += `<p id="player">${player}</p>`;
+}
+
+const renderTime = (differenceTime) => {
+	const playerEl = document.querySelector('#player');
+
+		playerEl.innerHTML += `<span id="playerTime">${differenceTime}</span>`;
+
+		document.querySelector('#restartButton').addEventListener('click', () => {
+			socket.emit('start-game');
+		});
 }
 
 const updateOnlinePlayers = (players) => {
-	document.querySelector('#players').innerHTML = players.map(player => `<li class="player">${player}<span>Your time</span></li>`).join("");
+	playerContainer.innerHTML = players.map(player => `<p id="player">${player}</p>`).join("");
 
 	if(players.length === 2){
 		socket.emit('start-game');
@@ -47,6 +58,10 @@ socket.on('game-started', (virusObject) => {
 
 socket.on('online-players', (players) => {
 	updateOnlinePlayers(players);
+});
+
+socket.on('render-time', (differenceTime) => {
+	renderTime(differenceTime);
 });
 
 socket.on('player-disconnected', (player) => {
