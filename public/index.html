@@ -24,6 +24,9 @@
 			<div id="wrapper" class="hide">
 				<div id="virus_game">
 					<div id="game_area">
+						<div id="loadingVirus" class="spinner-border" role="status">
+							<span class="sr-only">Loading...</span>
+						</div>
 						<img src="./assets/images/virus.svg" alt="Illustration of a virus" id="virus" class="hide">
 					</div><!-- /#game_area -->
 					<div id="score_board">
@@ -32,7 +35,6 @@
 						<div id="players">
 							<div id="playerContainer">
 							</div><!-- /#players -->
-							<button id="restartButton" class="btn btn-light">Restart!</button>
 						</div><!-- /#playersContainer -->
 					</div><!-- /#score_board -->
 				</div><!-- /#virus_game -->
@@ -40,6 +42,7 @@
 		</div><!-- /#app -->
 
 		<script src="/socket.io/socket.io.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.26.0/moment.min.js" integrity="sha256-5oApc/wMda1ntIEK4qoWJ4YItnV4fBHMwywunj8gPqc=" crossorigin="anonymous"></script>
 		<script src="/assets/js/virus_game.js"></script>
 	</body>
 </html>

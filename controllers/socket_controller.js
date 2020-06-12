@@ -6,18 +6,32 @@ const debug = require('debug')('virus_game:socket_controller');
 
 let io = null;
 const players = {};
+let playerReady = null;
+const playerTimes = [];
+let rounds = null;
 let startTime = null;
 
 /**
  * handle and compare click time to start time
  */
-function handleCompareClick() {
-	const clickTime = Date.now();
-	const differenceTime = (clickTime-startTime) / 1000;
+function handleCompareClick(clickTime) {
 
-	const player = players[this.id];
-	console.log(`${player} managed to click the virus in ${differenceTime} seconds`);
-	io.emit('render-time', differenceTime);
+	const time = (clickTime-startTime) / 1000;
+	playerTimes.push(time);
+
+	const lowestTime = Math.min(...playerTimes);
+
+	//console.log('playerTimes', playerTimes);
+	//console.log('lowestTime', lowestTime);
+	//console.log('rounds', rounds);
+
+	const info = {
+		lowestTime,
+		rounds,
+		players: players
+	}
+
+	this.emit('render-time', info);
 }
 
 /**
@@ -44,15 +58,15 @@ function getOnlinePlayers() {
  * Handle a new player connecting
  */
 function handleRegisterPlayer(player_name, callback) {
-	debug(`${player_name} connected to the game`);
+	//debug(`${player_name} connected to the game`);
 	players[this.id] = player_name;
 	callback({
 		joinGame: true,
 		onlinePlayers: getOnlinePlayers(),
 	});
 
-	// emit to all connected sockets
-	this.emit('player-connected', player_name);
+	// // emit to all connected sockets
+	// this.broadcast.emit('player-connected', player_name);
 
 	// emit online players to all connected sockets
 	 this.broadcast.emit('online-players', getOnlinePlayers());
@@ -61,19 +75,31 @@ function handleRegisterPlayer(player_name, callback) {
 /**
  * Handle and start the game
  */
-function handleStartGame(){
-	const virusObject = {
-		topCoordinates: Math.floor(Math.random()*(350-0)),//350
-		rightCoordinates: Math.floor(Math.random()*(550-0)),//550
-		setTime: Math.floor(Math.random()*10000),
+function handleStartGame () {
+	onlinePlayers = getOnlinePlayers();
+
+	debug(`${onlinePlayers} with socket id: ${this.id} started the game`)
+
+	playerReady += 1;
+	console.log('playerReady', playerReady)
+
+	if(playerReady === 2) {
+		rounds += 1;
+
+		const virusObject = {
+			topCoordinates: Math.floor(Math.random()*(350-0)),
+			rightCoordinates: Math.floor(Math.random()*(550-0)),
+			setTime: Math.floor(Math.random()*10000),
+		};
+
+		startTime = Date.now();
+		playerReady = 0;
+		io.emit('game-started', virusObject);
 	}
-	startTime = Date.now();
-	io.emit('game-started', virusObject);
+
 }
 
 module.exports = function(socket) {
-	debug(`Client ${socket.id} connected!`);
-
 	io = this;
 
 	socket.on('compare-click', handleCompareClick);
