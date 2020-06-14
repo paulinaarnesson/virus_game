@@ -6,10 +6,6 @@ const virus = document.querySelector('#virus');
 const wrapper = document.querySelector('#wrapper');
 const playerContainer = document.querySelector('#playerContainer');
 
-// const addPlayerToList = (player) => {
-// 	playerContainer.innerHTML += `<p id="player">${player}</p>`;
-// }
-
 const handleGameStarted = (virusObject) => {
 	setTimeout(() => {
 		document.querySelector('#loadingVirus').classList.add('hide');
@@ -19,46 +15,31 @@ const handleGameStarted = (virusObject) => {
 	}, virusObject.setTime);
 }
 
-const renderTime = (info) => {
+const renderTime = (fastestPlayer) => {
 
-	const playerEl = document.querySelector('#player');
+	const playerEl = document.querySelector('.player');
 
-	playerEl.innerHTML += `<span id="playerTime">${info.lowestTime}</span>`;
+	playerEl.innerHTML += `<span id="playerTime">${fastestPlayer.clickTime}</span>`;
 
-	if(info.rounds === 10){
+	if(fastestPlayer.rounds === 10){
 		alert('Winner is !!!')
 	}else{
 		socket.emit('start-game');
-		console.log('from else in front end');
 	}
 }
 
 const updateOnlinePlayersAndStart = (players) => {
-	playerContainer.innerHTML = players.map(player => `<p id="player">${player}</p>`).join("");
+	playerContainer.innerHTML = players.map(player => `<p class="player">${player}</p>`).join("");
 
-	socket.emit('start-game');
+	if(players.length === 2){
+		socket.emit('start-game');
+	}
 }
 
-// const startGame = (players) => {
-// 	socket.emit('start-game', players, (callback) => {
-// 		setTimeout(() => {
-// 			document.querySelector('#loadingVirus').classList.add('hide');
-// 			virus.classList.remove('hide');
-// 			virus.style.top = `${callback.topCoordinates}px`;
-// 			virus.style.right = `${callback.rightCoordinates}px`;
-// 		}, callback.setTime);
-// 	});
-// }
-
-// document.querySelector('#restartButton').addEventListener('click', () => {
-// 	socket.emit('start-game');
-// });
-
 virus.addEventListener('click', () => {
-	const clickTime = Date.now();
 	virus.classList.add('hide');
 	document.querySelector('#loadingVirus').classList.remove('hide');
-	socket.emit('compare-click', clickTime);
+	socket.emit('compare-click');
 });
 
 player_name_form.addEventListener('submit', e => {
@@ -100,6 +81,23 @@ socket.on('player-disconnected', (player) => {
 // 	addPlayerToList(player_name);
 // });
 
+// const startGame = (players) => {
+// 	socket.emit('start-game', players, (callback) => {
+// 		setTimeout(() => {
+// 			document.querySelector('#loadingVirus').classList.add('hide');
+// 			virus.classList.remove('hide');
+// 			virus.style.top = `${callback.topCoordinates}px`;
+// 			virus.style.right = `${callback.rightCoordinates}px`;
+// 		}, callback.setTime);
+// 	});
+// }
+
+// document.querySelector('#restartButton').addEventListener('click', () => {
+// 	socket.emit('start-game');
+// });
 
 
+// const addPlayerToList = (player) => {
+// 	playerContainer.innerHTML += `<p id="player">${player}</p>`;
+// }
 

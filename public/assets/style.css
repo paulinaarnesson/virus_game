@@ -17,7 +17,7 @@
 	width: 600px;
 }
 
-#player{
+.player{
 	display: flex;
 	flex-direction: column;
 }
