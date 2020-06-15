@@ -1,3 +1,9 @@
+h1{
+	font-size: 2rem;
+	margin-top: 2rem;
+	text-align: center;
+}
+
 .frontPageVirus{
 	height: auto;
 	margin-top: 50px;
@@ -22,6 +28,10 @@
 	margin: 30px;
 	position: relative;
 	width: 600px;
+}
+
+#loadingVirus{
+	margin: 10px;
 }
 
 #player{

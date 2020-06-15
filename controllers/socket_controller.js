@@ -5,48 +5,51 @@
 const debug = require('debug')('virus_game:socket_controller');
 
 let io = null;
+let lowestTime = null;
 const players = {};
 let playerArray =[];
+let playerClicked = null;
 let playerReady = null;
 const playerTimes = [];
 let startTime = null;
+let scoreArray = [];
 
 /**
  * handle and compare click time to start time
  */
 function handleCompareClick() {
-	console.log('playerArray Before', playerArray);
-	let fastestPlayer = [];
 	const time = (Date.now()-startTime) / 1000;
 	playerTimes.push(time);
-	let lowestTime = Math.min(...playerTimes);
+
+	console.log('playerTimes', playerTimes);
 
 	console.log(`${players[this.id]} managed to click the virus in ${time}`);
 
-	if(playerArray.length === 2){
+	playerClicked += 1;
 
-	}else{
-		playerArray.push(
-			{
-				name: players[this.id],
-				clickTime: time,
-				profits: 0,
-			}
-		);
+	playerArray.push(
+		{
+			name: players[this.id],
+			clickTime: time,
+		}
+	);
+
+	if (playerClicked === 2){
+		lowestTime = Math.min(...playerTimes);
+
+		let fastestPlayer = playerArray.find(player => {
+			return player.clickTime === lowestTime
+		});
+
+		scoreArray.push(
+			fastestPlayer,
+		)
+		console.log('scoreArray', scoreArray);
+		io.emit('render-time', scoreArray);
 	}
+
 	console.log('playerArray', playerArray);
 
-	fastestPlayer = playerArray.map(player => {
-		if (player.clickTime === lowestTime){
-			return player;
-		}else{
-			return false;
-		}
-	});
-	console.log('fastestPlayer', fastestPlayer);
-
-	lowestTime = 0;
-	this.emit('render-time', fastestPlayer);
 }
 
 /**
@@ -93,7 +96,8 @@ function handleRegisterPlayer(player_name, callback) {
  * Handle and start the game
  */
 function handleStartGame () {
-	onlinePlayers = getOnlinePlayers();
+	playerArray = [];
+	let onlinePlayers = getOnlinePlayers();
 
 	debug(`${onlinePlayers} with socket id: ${this.id} started the game`)
 

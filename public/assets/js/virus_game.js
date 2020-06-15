@@ -5,8 +5,7 @@ const sign_in = document.querySelector('#sign_in');
 const virus = document.querySelector('#virus');
 const wrapper = document.querySelector('#wrapper');
 const playerContainer = document.querySelector('#playerContainer');
-
-let rounds = null;
+let playersScoreArray = [];
 
 const handleGameStarted = (virusObject) => {
 	setTimeout(() => {
@@ -18,9 +17,19 @@ const handleGameStarted = (virusObject) => {
 	}, virusObject.setTime);
 }
 
-const renderTime = (fastestPlayer) => {
-	rounds += 1;
-	console.log('fastestPlayer', fastestPlayer);
+const renderTime = (scoreArray) => {
+	let winner = scoreArray[scoreArray.length -1];
+	console.log('winner', winner);
+	console.log('players in render', playersScoreArray);
+	playersScoreArray.map(player => {
+		console.log('player in map', player);
+		if(player.name === winner.name){
+			player.score += 1;
+		}
+	});
+
+	console.log('players in render', playersScoreArray);
+
 	const roundsContainer = document.querySelector('#roundsContainer');
 
 
@@ -30,33 +39,38 @@ const renderTime = (fastestPlayer) => {
 	// 	console.log(element.textContent);
 	// })
 
-	fastestPlayer.map(player => {
-		if(player){
-			document.querySelector(`.${player.name}`).innerHTML = `<span>${player.profits}</span>`;
+	// scoreArray.map(score => {
+	// 		document.querySelector(`.${score.name}`).innerHTML += `<span>${1}</span>`;
 
-			roundsContainer.innerHTML = `
-				<p>${rounds}</p>
-				<p><strong>This round</strong></p>
-				<p id="playerTime">${player.name}: ${player.clickTime}</p>
-			`;
-		}else{
-			virus.classList.add('hide');
-			document.querySelector('#lostParagraph').classList.remove('hide');
-		}
-	});
+	// 		roundsContainer.innerHTML = `
+	// 			<p>${scoreArray.length}</p>
+	// 			<p><strong>This round</strong></p>
+	// 			<p id="playerTime">${score.name}: ${score.clickTime}</p>
+	// 		`;
 
+	// });
 
-	if(rounds === 10){
-		alert('Winner is !!!')
-	}else{
-		socket.emit('start-game');
-	}
+// virus.classList.add('hide');
+			// document.querySelector('#lostParagraph').classList.remove('hide');
+	// if(rounds === 10){
+	// 	alert('Winner is !!!')
+	// }else{
+	// 	socket.emit('start-game');
+	// }
 }
 
 const updateOnlinePlayersAndStart = (players) => {
 	playerContainer.innerHTML = players.map(player => `<p id="player" class=${player}>${player}</p>`).join("");
 
 	if(players.length === 2){
+		//Save players for future in front end
+		playersScoreArray = players.map(player => {
+			return {
+				name: player,
+				score: 0,
+			}
+		});
+
 		socket.emit('start-game');
 	}
 }
