@@ -3,7 +3,7 @@
 	display: none !important;
 }
 
-.score_paragraph{
+.onlinePlayers{
 	font-size: 1.2rem;
 	margin-top: 10px;
 }
@@ -17,13 +17,7 @@
 	width: 600px;
 }
 
-.player{
-	display: flex;
-	flex-direction: column;
-}
-
-
-#players{
+#player{
 	display: flex;
 	flex-direction: column;
 }
@@ -31,7 +25,7 @@
 #playerContainer{
 	background-color: blanchedalmond;
 	display: flex;
-	flex-direction: column;
+	justify-content: space-between;
 	margin: 5px;
 	padding: 5px;
 }

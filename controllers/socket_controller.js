@@ -6,38 +6,47 @@ const debug = require('debug')('virus_game:socket_controller');
 
 let io = null;
 const players = {};
-const playerArray = [];
+let playerArray =[];
 let playerReady = null;
 const playerTimes = [];
-let rounds = null;
 let startTime = null;
 
 /**
  * handle and compare click time to start time
  */
 function handleCompareClick() {
+	console.log('playerArray', playerArray);
+	let fastestPlayer = [];
 	const time = (Date.now()-startTime) / 1000;
 	playerTimes.push(time);
+	let lowestTime = Math.min(...playerTimes);
 
-	playerArray.push({
-		name: players[this.id],
-		clickTime: time,
-		rounds,
+	console.log(`${players[this.id]} managed to click the virus in ${time}`);
+
+	if(playerArray.length === 2){
+		return;
+	}else{
+		playerArray.push(
+			{
+				name: players[this.id],
+				clickTime: time,
+				profits: 0,
+			}
+		);
+	}
+	console.log('playerArray', playerArray);
+
+	fastestPlayer = playerArray.map(player => {
+		if (player.clickTime === lowestTime){
+			player.profits += 1;
+			return player;
+		}else{
+			return false;
+		}
 	});
-
-	//console.log('PLAYERARRAY', playerArray);
-
-	const lowestTime = Math.min(...playerTimes);
-
-	const fastestPlayer = playerArray.find(player => {
-		return player.clickTime === lowestTime;
-	})
-
 	console.log('fastestPlayer', fastestPlayer);
-	//console.log('playerTimes', playerTimes);
-	//console.log('lowestTime', lowestTime);
-	//console.log('rounds', rounds);
 
+	lowestTime = 0;
 	this.emit('render-time', fastestPlayer);
 }
 
@@ -94,8 +103,6 @@ function handleStartGame () {
 	//console.log('onlinePlayers', onlinePlayers)
 
 	if(onlinePlayers.length === playerReady) {
-		rounds += 1;
-		console.log('ROUNDS', rounds);
 		const virusObject = {
 			topCoordinates: Math.floor(Math.random()*(350-0)),
 			rightCoordinates: Math.floor(Math.random()*(550-0)),

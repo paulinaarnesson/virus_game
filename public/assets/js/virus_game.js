@@ -6,8 +6,11 @@ const virus = document.querySelector('#virus');
 const wrapper = document.querySelector('#wrapper');
 const playerContainer = document.querySelector('#playerContainer');
 
+let rounds = null;
+
 const handleGameStarted = (virusObject) => {
 	setTimeout(() => {
+		document.querySelector('#lostParagraph').classList.add('hide');
 		document.querySelector('#loadingVirus').classList.add('hide');
 		virus.classList.remove('hide');
 		virus.style.top = `${virusObject.topCoordinates}px`;
@@ -16,12 +19,36 @@ const handleGameStarted = (virusObject) => {
 }
 
 const renderTime = (fastestPlayer) => {
+	rounds += 1;
+	console.log('fastestPlayer', fastestPlayer);
+	const roundsContainer = document.querySelector('#roundsContainer');
 
-	const playerEl = document.querySelector('.player');
 
-	playerEl.innerHTML += `<span id="playerTime">${fastestPlayer.clickTime}</span>`;
+	// const all = document.querySelectorAll('.player');
 
-	if(fastestPlayer.rounds === 10){
+	// all.forEach(element => {
+	// 	console.log(element.textContent);
+	// })
+
+	fastestPlayer.map(player => {
+		if(player){
+			console.log('Player element', document.querySelector(`.${player.name}`));
+
+			document.querySelector(`.${player.name}`).innerHTML += `<span>${player.profits}</span>`;
+
+			roundsContainer.innerHTML += `
+				<p>${rounds}</p>
+				<p><strong>Latest round</strong></p>
+				<p id="playerTime">${player.name}: ${player.clickTime}</p>
+			`;
+		}else{
+			virus.classList.add('hide');
+			document.querySelector('#lostParagraph').classList.remove('hide');
+		}
+	});
+
+
+	if(rounds === 10){
 		alert('Winner is !!!')
 	}else{
 		socket.emit('start-game');
@@ -29,7 +56,7 @@ const renderTime = (fastestPlayer) => {
 }
 
 const updateOnlinePlayersAndStart = (players) => {
-	playerContainer.innerHTML = players.map(player => `<p class="player">${player}</p>`).join("");
+	playerContainer.innerHTML = players.map(player => `<p id="player" class=${player}>${player}</p>`).join("");
 
 	if(players.length === 2){
 		socket.emit('start-game');
