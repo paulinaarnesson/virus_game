@@ -1,3 +1,8 @@
+.frontPageVirus{
+	height: auto;
+	margin-top: 50px;
+	width: 100px;
+}
 
 .hide {
 	display: none !important;
@@ -9,6 +14,8 @@
 }
 
 #game_area{
+	background-image: url("../assets/images/background.png");
+	background-size: cover;
 	border: 1px solid #949596;
 	border-radius: 5px 5px;
 	height: 400px;
@@ -23,7 +30,8 @@
 }
 
 #playerContainer{
-	background-color: blanchedalmond;
+	background-color: #7aa9ff;
+	border-radius: 5px 5px;
 	display: flex;
 	justify-content: space-between;
 	margin: 5px;
@@ -31,22 +39,17 @@
 }
 
 #playerTime{
-	border-bottom: 1px solid #949596;
 	margin-top: 5px;
 	padding-top: 5px;
 }
 
-#player_name-form{
-	margin-top: 200px;
+#player_name_form{
+	margin-top: 50px;
 	width: 100%;
 }
 
-#restartButton{
-	background-color: #949596;
-	margin: 5px;
-}
-
 #score_board{
+	background-color: #95f9f6;
 	border: 1px solid #949596;
 	border-radius: 5px 5px;
 	height: 400px;
@@ -56,12 +59,18 @@
 	width: 200px;
 }
 
-#virus_game{
+#sign_in{
 	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
-img{
+#virus{
 	height: auto;
 	position: absolute;
 	width: 50px;
+}
+
+#virus_game{
+	display: flex;
 }

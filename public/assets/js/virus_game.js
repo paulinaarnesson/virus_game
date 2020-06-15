@@ -1,6 +1,6 @@
 const socket = io();
 
-const player_name_form = document.querySelector('#player_name-form');
+const player_name_form = document.querySelector('#player_name_form');
 const sign_in = document.querySelector('#sign_in');
 const virus = document.querySelector('#virus');
 const wrapper = document.querySelector('#wrapper');
@@ -32,13 +32,11 @@ const renderTime = (fastestPlayer) => {
 
 	fastestPlayer.map(player => {
 		if(player){
-			console.log('Player element', document.querySelector(`.${player.name}`));
+			document.querySelector(`.${player.name}`).innerHTML = `<span>${player.profits}</span>`;
 
-			document.querySelector(`.${player.name}`).innerHTML += `<span>${player.profits}</span>`;
-
-			roundsContainer.innerHTML += `
+			roundsContainer.innerHTML = `
 				<p>${rounds}</p>
-				<p><strong>Latest round</strong></p>
+				<p><strong>This round</strong></p>
 				<p id="playerTime">${player.name}: ${player.clickTime}</p>
 			`;
 		}else{

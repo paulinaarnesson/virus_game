@@ -15,7 +15,7 @@ let startTime = null;
  * handle and compare click time to start time
  */
 function handleCompareClick() {
-	console.log('playerArray', playerArray);
+	console.log('playerArray Before', playerArray);
 	let fastestPlayer = [];
 	const time = (Date.now()-startTime) / 1000;
 	playerTimes.push(time);
@@ -24,7 +24,7 @@ function handleCompareClick() {
 	console.log(`${players[this.id]} managed to click the virus in ${time}`);
 
 	if(playerArray.length === 2){
-		return;
+
 	}else{
 		playerArray.push(
 			{
@@ -38,7 +38,6 @@ function handleCompareClick() {
 
 	fastestPlayer = playerArray.map(player => {
 		if (player.clickTime === lowestTime){
-			player.profits += 1;
 			return player;
 		}else{
 			return false;
