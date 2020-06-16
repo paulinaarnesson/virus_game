@@ -11,24 +11,27 @@
 	<body>
 		<div id="app">
 			<div id="sign_in" class="container">
+				<h1>Kill the virus!</h1>
 				<img src="./assets/images/virus.svg" alt="Illustration of a virus" class="frontPageVirus">
 				<form id="player_name_form">
 					<div class="form-group input-group">
 						<input type="text" id="player_name" class="form-control form-control-lg" required placeholder="Choose nickname">
 						<div class="input-group-append">
-							<button id="play_button" class="input-group-text">Play game!</button>
+							<button id="play_button" class="input-group-text">Let's play!</button>
 						</div>
 					</div><!-- /.form-group -->
 				</form><!-- /#username-form -->
 			</div><!-- /#sign_in -->
 
 			<div id="wrapper" class="hide">
-				<h1>Be first to click the virus!</h1>
+				<h1>Be the first player to click the virus!</h1>
 				<div id="virus_game">
 					<div id="game_area">
-						<p id="lostParagraph" class="hide">Sorry you lost this round!</p>
 						<div id="loadingVirus" class="spinner-border" role="status">
 							<span class="sr-only">Loading...</span>
+						</div>
+						<div class="alert alert-info hide" role="alert">
+
 						</div>
 						<img src="./assets/images/virus.svg" alt="Illustration of a virus" id="virus" class="hide">
 					</div><!-- /#game_area -->
