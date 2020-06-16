@@ -4,6 +4,7 @@
 
 const debug = require('debug')('virus_game:socket_controller');
 
+//global variables
 let io = null;
 let lowestTime = null;
 const players = {};
@@ -14,15 +15,16 @@ let playerTimes = [];
 let startTime = null;
 let scoreArray = [];
 
-/**
- * handle and compare click time to start time
- */
 function handleCompareClick() {
+	//Stop timer and count the difference from start to now, convert to seconds
 	const time = (Date.now()-startTime) / 1000;
+	//save in array to get all players times
 	playerTimes.push(time);
 
+	//add variable for every player that clicked the virus
 	playerClicked += 1;
 
+	//Save object with name and time to another array
 	playerArray.push(
 		{
 			name: players[this.id],
@@ -30,25 +32,27 @@ function handleCompareClick() {
 		}
 	);
 
+	//Wait so you have 2 players that clicked
 	if (playerClicked === 2){
+		//find fastest click in array
 		lowestTime = Math.min(...playerTimes);
 
+		//Find the fastest time in array of users and times
 		let fastestPlayer = playerArray.find(player => {
 			return player.clickTime === lowestTime
 		});
 
+		//Push winner to array of all rounds
 		scoreArray.push(
 			fastestPlayer,
 		)
+		//emit and send winners with
 		io.emit('render-timeAndScore', scoreArray);
 	}
 }
 
-/**
- * Handle user disconnecting
- */
 function handleDisconnect() {
-	debug(`Socket ${players[this.id]} left the game`);
+	//Empty all variables
 	playerReady = 0;
 	playerTimes = [];
 	playerArray = [];
@@ -62,10 +66,9 @@ function handleDisconnect() {
 		delete players[this.id];
 	}
 }
-/**
- * Handle find winner
- */
+
 function handleFindWinner(playersScoreArray){
+	//find winner with highest score or equal
 	winner = playersScoreArray.reduce( (prev, current) => {
 		if(prev.score > current.score){
 			return `Congrats!!! The winner is: ${prev.name}!`;
@@ -77,51 +80,47 @@ function handleFindWinner(playersScoreArray){
 	});
 	this.emit('render-winner', winner);
 }
-/**
- * Get nicknames of online players
- */
+
 function getOnlinePlayers() {
 	return Object.values(players);
 }
 
-/**
- * Handle a new player connecting
- */
 function handleRegisterPlayer(player_name, callback) {
-	//debug(`${player_name} connected to the game`);
+	//save player_name to players Object with socket.id as key
 	players[this.id] = player_name;
+	//Send back onlineplayers with joinGame so front end can render game area
 	callback({
 		joinGame: true,
 		onlinePlayers: getOnlinePlayers(),
 	});
 
-	// // emit to all connected sockets
-	// this.broadcast.emit('player-connected', player_name);
-
-	//emit online players to all connected sockets
+	//emit online players
 	this.broadcast.emit('online-players', getOnlinePlayers());
 }
 
-/**
- * Handle and start the game
- */
 function handleStartGame () {
+	//New game so empty all variables
 	playerTimes = [];
 	playerArray = [];
 	playerClicked = 0;
 
+	//Get online players
 	let onlinePlayers = getOnlinePlayers();
-
+	//For every submit add 1
 	playerReady += 1;
 
+	//Wait for two players to start game
 	if(onlinePlayers.length === playerReady) {
+		//Save random coordinats and time in object
 		const virusObject = {
 			topCoordinates: Math.floor(Math.random()*(350-0)),
 			rightCoordinates: Math.floor(Math.random()*(550-0)),
 			setTime: Math.floor(Math.random()*5000),
 		};
 
+		//Start timer
 		startTime = Date.now();
+		//clear
 		playerReady = 0;
 		io.emit('game-started', virusObject);
 	}
@@ -132,6 +131,7 @@ module.exports = function(socket) {
 	debug(`${socket.id}, just connected`);
 	io = this;
 
+	//Listeners
 	socket.on('compare-click', handleCompareClick);
 
 	socket.on('disconnect', handleDisconnect);

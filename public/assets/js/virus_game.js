@@ -1,5 +1,10 @@
+/**
+ * Virus Game front end
+ */
+
 const socket = io();
 
+//Save html in variables that needs in several places
 const alertWinner = document.querySelector('.alert');
 const loading = document.querySelector('#loadingVirus');
 const playerContainer = document.querySelector('#playerContainer');
@@ -9,20 +14,35 @@ const sign_in = document.querySelector('#sign_in');
 const virus = document.querySelector('#virus');
 const wrapper = document.querySelector('#wrapper');
 
+//Array to save object with name of user and score
 let playersScoreArray = [];
 
 const handleGameStarted = (virusObject) => {
 	setTimeout(() => {
+		//Hide spinner and show virus
 		loading.classList.add('hide');
 		virus.classList.remove('hide');
+		//Add styles with coordinates to Virus and set timeout
 		virus.style.top = `${virusObject.topCoordinates}px`;
 		virus.style.right = `${virusObject.rightCoordinates}px`;
 	}, virusObject.setTime);
 }
 
+const handlePlayerDisconnected = (player) => {
+	//Empty array with score
+	playersScoreArray = [];
+	//Alert a message
+	alert(`Your opponent ${player} gave up and you won the game!`);
+	//And show first page
+	sign_in.classList.remove('hide');
+	wrapper.classList.add('hide');
+}
+
 const handleRenderTimeAndScore = (scoreArray) => {
+	//Get the last winner in the array of winner rounds
 	let winner = scoreArray[scoreArray.length -1];
 
+	//Loop the array with players and their score to find the number of scores for this winner and render it!
 	playersScoreArray.map(player => {
 		if(player.name === winner.name){
 			player.score += 1;
@@ -30,12 +50,14 @@ const handleRenderTimeAndScore = (scoreArray) => {
 		}
 	});
 
+	//Render total of rounds, and this rounds winner.
 	roundsContainer.innerHTML = `
 		<p>${scoreArray.length}</p>
 		<p><strong>This round</strong></p>
 		<p id="playerTime">${winner.name}: ${winner.clickTime}</p>
 	`;
 
+	//Check if 10 rounds
 	if(scoreArray.length === 10){
 		socket.emit('find-winner', playersScoreArray);
 	}else{
@@ -44,45 +66,58 @@ const handleRenderTimeAndScore = (scoreArray) => {
 }
 
 const handleRenderWinner = (winner) => {
+	//render winner and hide spinner
 	alertWinner.innerHTML = winner;
  	alertWinner.classList.remove('hide');
  	loading.classList.add('hide');
 }
 
 const updateOnlinePlayersAndStart = (players) => {
+	//Empty old information in DOM
 	alertWinner.classList.add('hide');
 	roundsContainer.innerHTML = '';
+	//Show spinner while waiting for player and hide Virus
 	loading.classList.remove('hide');
 	virus.classList.add('hide');
 
+	//Render online players to DOM
 	playerContainer.innerHTML = players.map(player => `<p id="player">${player}<span class=${player}>0</span></p>`).join("");
 
+	//Start game when 2 players are "online"
 	if(players.length === 2){
-		//Save players for future in front end
+		//Save players in object with score for future in front end
 		playersScoreArray = players.map(player => {
 			return {
 				name: player,
 				score: 0,
 			}
 		});
-
 		socket.emit('start-game');
 	}
 }
 
+/**
+ * EventListeners
+ */
+
+ //Listen to click on virus
 virus.addEventListener('click', () => {
 	virus.classList.add('hide');
 	loading.classList.remove('hide');
 	socket.emit('compare-click');
 });
 
+//listen to submit in form when adding player nickname
 player_name_form.addEventListener('submit', e => {
 	e.preventDefault();
 
+	//Get value of input and save
 	player_name = document.querySelector('#player_name').value;
 
+	//Register player and send nickname and a callback
 	socket.emit('register-player', player_name, (status) => {
 
+		//if joinGame is true show game and update players in list
 		if (status.joinGame) {
 			sign_in.classList.add('hide');
 			wrapper.classList.remove('hide');
@@ -101,12 +136,7 @@ socket.on('online-players', (players) => {
 });
 
 socket.on('player-disconnected', (player) => {
-	playersScoreArray = [];
-
-	alert(`Your opponent ${player} gave up and you won the game!`);
-
-	sign_in.classList.remove('hide');
-	wrapper.classList.add('hide');
+	handlePlayerDisconnected(player);
 });
 
 socket.on('render-timeAndScore', (differenceTime) => {
