@@ -68,7 +68,7 @@ function handleDisconnect() {
 	if (players[this.id]) {
 		io.emit('player-disconnected', players[this.id]);
 		// remove player from list of connected players
-		delete players;
+		delete players[this.id];
 	}
 }
 
