@@ -108,8 +108,8 @@ const handleRenderTimeAndScore = (playerObject) => {
 	thisRoundsContainer.innerHTML = `
 		<p class="paragraph"><strong>This round</strong></p>
 		<div class="thisRoundsContainer">
-			<p id="playerTime">${winner.name}: ${winner.clickTime / 1000} sec</p>
-			<p id="playerTime">${loser.name}: ${loser.clickTime / 1000} sec</p>
+			<p id="playerTime">${winner.name}: ${winner.clickTime / 1000}</p>
+			<p id="playerTime">${loser.name}: ${loser.clickTime / 1000}</p>
 		</div>
 	`;
 
