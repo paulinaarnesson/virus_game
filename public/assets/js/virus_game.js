@@ -10,14 +10,18 @@ const loading = document.querySelector('#loadingVirus');
 const playerContainer = document.querySelector('#playerContainer');
 const player_name_form = document.querySelector('#player_name_form');
 const roundsContainer = document.querySelector('#roundsContainer');
+const thisRoundsContainer = document.querySelector('#thisRoundsContainer');
 const sign_in = document.querySelector('#sign_in');
-//const stopWatch = document.querySelector('#stopWatch');
+const stopWatch = document.querySelector('#stopWatch');
 const virus = document.querySelector('#virus');
 const wrapper = document.querySelector('#wrapper');
 
 //Array to save object with name of user and score
 let playersScoreArray = [];
-//let runClock;
+let runClock;
+let updatedTime;
+let startTime;
+let difference;
 
 const getMeasures = () => {
 	//Get game area size so the server can send the virus inside game area
@@ -41,31 +45,40 @@ const handleGameStarted = (virusObject) => {
 		virus.style.left = `${virusObject.leftCoordinates}px`;
 
 		//Start timer
-		//startTimer();
+		startTimer();
 	}, virusObject.setTime);
 }
 
-// const stopTimer = () => {
-// 	console.log('timer stopped');
-// 	clearInterval(runClock);
-// }
+const stopTimer = () => {
+	clearInterval(runClock);
+	clockCounter = 0;
+	handleTimer();
+}
 
-// const startTimer = () => {
-// 	console.log('timer started');
-// 	runClock = setInterval(handleTimer, 10);
-// }
+const startTimer = () => {
+	startTime = new Date().getTime();
+	runClock = setInterval(handleTimer, 10);
+}
 
-// const handleTimer = () => {
-// 	let counter = 0;
-// 	console.log('handle timer', counter);
-// 	stopWatch.innerHTML = moment().minute(0).second(0).milliseconds(counter++).format('mm : ss : SSS');
-// }
+const handleTimer = () => {
+	updatedTime = new Date().getTime();
+	difference =  updatedTime - startTime;
+	let minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+	let seconds = Math.floor((difference % (1000 * 60)) / 1000);
+	let milliseconds = Math.floor((difference % (1000)) / 1);
+
+	minutes = (minutes < 10) ? "0" + minutes : minutes;
+	seconds = (seconds < 10) ? "0" + seconds : seconds;
+	milliseconds = (milliseconds < 100) ? (milliseconds < 10) ? "00" + milliseconds : "0" + milliseconds : milliseconds;
+
+	stopWatch.innerHTML = minutes + ' : ' + seconds + ' : ' + milliseconds;
+}
 
 const handlePlayerDisconnected = (player) => {
 	//Empty array with score
 	playersScoreArray = [];
 	//Alert a message
-	alert(`Your opponent ${player} gave up and you won the game!`);
+	alert(`Your opponent ${player} disconnected!`);
 	//And show first page
 	sign_in.classList.remove('hide');
 	wrapper.classList.add('hide');
@@ -87,10 +100,17 @@ const handleRenderTimeAndScore = (playerObject) => {
 
 	//Render total of rounds, and this rounds winner and loser.
 	roundsContainer.innerHTML = `
-		<p>${playerObject.winner.length}</p>
-		<p><strong>This round</strong></p>
-		<p id="playerTime">${winner.name}: ${winner.clickTime}</p>
-		<p id="playerTime">${loser.name}: ${loser.clickTime}</p>
+		<p class="paragraph"><strong>Rounds</strong></p>
+		<div class="roundsContainer">
+			<p>${playerObject.winner.length}</p>
+		</div>
+	`;
+	thisRoundsContainer.innerHTML = `
+		<p class="paragraph"><strong>This round</strong></p>
+		<div class="thisRoundsContainer">
+			<p id="playerTime">${winner.name}: ${winner.clickTime / 1000} sec</p>
+			<p id="playerTime">${loser.name}: ${loser.clickTime / 1000} sec</p>
+		</div>
 	`;
 
 	//Check if 10 rounds
@@ -145,8 +165,10 @@ const updateOnlinePlayersAndStart = (players) => {
 virus.addEventListener('click', () => {
 	virus.classList.add('hide');
 	loading.classList.remove('hide');
-	//stopTimer();
-	socket.emit('compare-click');
+	//stop timer
+	stopTimer();
+
+	socket.emit('compare-click', difference);
 });
 
 //listen to submit in form when adding player nickname

@@ -14,14 +14,10 @@ let playerArray =[];
 let playerClicked = null;
 let playerReady = null;
 let playerTimes = [];
-let startTime = null;
 let winnerArray = [];
 
-function handleCompareClick() {
-	//Stop timer and count the difference from start to now, convert to seconds
-	const time = (Date.now()-startTime) / 1000;
-	//save in array to get all players times
-	playerTimes.push(time);
+function handleCompareClick(difference) {
+	playerTimes.push(difference);
 
 	//add variable for every player that clicked the virus
 	playerClicked += 1;
@@ -30,7 +26,7 @@ function handleCompareClick() {
 	playerArray.push(
 		{
 			name: players[this.id],
-			clickTime: time,
+			clickTime: difference,
 		}
 	);
 
@@ -146,8 +142,6 @@ function handleStartGame (measures) {
 			setTime: Math.floor(Math.random()*5000),
 		};
 
-		//Start timer
-		startTime = Date.now();
 		//clear
 		playerReady = 0;
 		smallestMeassures = null;
