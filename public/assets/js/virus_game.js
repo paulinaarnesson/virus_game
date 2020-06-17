@@ -17,6 +17,16 @@ const wrapper = document.querySelector('#wrapper');
 //Array to save object with name of user and score
 let playersScoreArray = [];
 
+const getMeasures = () => {
+	//Get game area size so the server can send the virus inside game area
+	const gameArea = document.querySelector('#game_area');
+	const gameAreaObject = {
+		width: gameArea.clientWidth,
+		height: gameArea.clientHeight,
+	}
+	return gameAreaObject;
+}
+
 const handleGameStarted = (virusObject) => {
 	setTimeout(() => {
 		//Hide spinner and show virus
@@ -24,7 +34,9 @@ const handleGameStarted = (virusObject) => {
 		virus.classList.remove('hide');
 		//Add styles with coordinates to Virus and set timeout
 		virus.style.top = `${virusObject.topCoordinates}px`;
+		virus.style.bottom = `${virusObject.bottomCoordinates}px`;
 		virus.style.right = `${virusObject.rightCoordinates}px`;
+		virus.style.left = `${virusObject.leftCoordinates}px`;
 	}, virusObject.setTime);
 }
 
@@ -61,7 +73,7 @@ const handleRenderTimeAndScore = (scoreArray) => {
 	if(scoreArray.length === 10){
 		socket.emit('find-winner', playersScoreArray);
 	}else{
-		socket.emit('start-game');
+		socket.emit('start-game', getMeasures());
 	}
 }
 
@@ -97,7 +109,7 @@ const updateOnlinePlayersAndStart = (players) => {
 				score: 0,
 			}
 		});
-		socket.emit('start-game');
+		socket.emit('start-game', getMeasures());
 	}
 }
 

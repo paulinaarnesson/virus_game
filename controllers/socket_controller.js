@@ -103,7 +103,7 @@ function handleRegisterPlayer(player_name, callback) {
 	this.broadcast.emit('online-players', getOnlinePlayers());
 }
 
-function handleStartGame () {
+function handleStartGame (measures) {
 	//New game so empty all variables
 	playerTimes = [];
 	playerArray = [];
@@ -118,8 +118,10 @@ function handleStartGame () {
 	if(onlinePlayers.length === playerReady) {
 		//Save random coordinats and time in object
 		const virusObject = {
-			topCoordinates: Math.floor(Math.random()*(350-0)),
-			rightCoordinates: Math.floor(Math.random()*(550-0)),
+			topCoordinates: Math.floor(Math.random()*(measures.height)),
+			bottomCoordinates: Math.floor(Math.random()*(measures.height)),
+			rightCoordinates: Math.floor(Math.random()*(measures.width)),
+			leftCoordinates: Math.floor(Math.random()*(measures.width)),
 			setTime: Math.floor(Math.random()*5000),
 		};
 
