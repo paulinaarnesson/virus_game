@@ -11,13 +11,13 @@ const playerContainer = document.querySelector('#playerContainer');
 const player_name_form = document.querySelector('#player_name_form');
 const roundsContainer = document.querySelector('#roundsContainer');
 const sign_in = document.querySelector('#sign_in');
-const stopWatch = document.querySelector('#stopWatch');
+//const stopWatch = document.querySelector('#stopWatch');
 const virus = document.querySelector('#virus');
 const wrapper = document.querySelector('#wrapper');
 
 //Array to save object with name of user and score
 let playersScoreArray = [];
-let runClock;
+//let runClock;
 
 const getMeasures = () => {
 	//Get game area size so the server can send the virus inside game area
@@ -41,25 +41,25 @@ const handleGameStarted = (virusObject) => {
 		virus.style.left = `${virusObject.leftCoordinates}px`;
 
 		//Start timer
-		startTimer();
+		//startTimer();
 	}, virusObject.setTime);
 }
 
-const stopTimer = () => {
-	console.log('timer stopped');
-	clearInterval(runClock);
-}
+// const stopTimer = () => {
+// 	console.log('timer stopped');
+// 	clearInterval(runClock);
+// }
 
-const startTimer = () => {
-	console.log('timer started');
-	runClock = setInterval(handleTimer, 10);
-}
+// const startTimer = () => {
+// 	console.log('timer started');
+// 	runClock = setInterval(handleTimer, 10);
+// }
 
-const handleTimer = () => {
-	let counter = 0;
-	console.log('handle timer', counter);
-	stopWatch.innerHTML = moment().minute(0).second(counter++).format('mm : ss : SSS');
-}
+// const handleTimer = () => {
+// 	let counter = 0;
+// 	console.log('handle timer', counter);
+// 	stopWatch.innerHTML = moment().minute(0).second(0).milliseconds(counter++).format('mm : ss : SSS');
+// }
 
 const handlePlayerDisconnected = (player) => {
 	//Empty array with score
@@ -71,9 +71,11 @@ const handlePlayerDisconnected = (player) => {
 	wrapper.classList.add('hide');
 }
 
-const handleRenderTimeAndScore = (scoreArray) => {
-	//Get the last winner in the array of winner rounds
-	let winner = scoreArray[scoreArray.length -1];
+const handleRenderTimeAndScore = (playerObject) => {
+	//Get the last winner and loser in the arrays
+	let winner = playerObject.winner[playerObject.winner.length -1];
+
+	let loser = playerObject.loser[playerObject.loser.length -1];
 
 	//Loop the array with players and their score to find the number of scores for this winner and render it!
 	playersScoreArray.map(player => {
@@ -83,15 +85,16 @@ const handleRenderTimeAndScore = (scoreArray) => {
 		}
 	});
 
-	//Render total of rounds, and this rounds winner.
+	//Render total of rounds, and this rounds winner and loser.
 	roundsContainer.innerHTML = `
-		<p>${scoreArray.length}</p>
+		<p>${playerObject.winner.length}</p>
 		<p><strong>This round</strong></p>
 		<p id="playerTime">${winner.name}: ${winner.clickTime}</p>
+		<p id="playerTime">${loser.name}: ${loser.clickTime}</p>
 	`;
 
 	//Check if 10 rounds
-	if(scoreArray.length === 10){
+	if(playerObject.winner.length === 10){
 		socket.emit('find-winner', playersScoreArray);
 	}else{
 		socket.emit('start-game', getMeasures());
@@ -142,7 +145,7 @@ const updateOnlinePlayersAndStart = (players) => {
 virus.addEventListener('click', () => {
 	virus.classList.add('hide');
 	loading.classList.remove('hide');
-	stopTimer();
+	//stopTimer();
 	socket.emit('compare-click');
 });
 

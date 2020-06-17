@@ -6,6 +6,7 @@ const debug = require('debug')('virus_game:socket_controller');
 
 //global variables
 let io = null;
+let loserArray = [];
 let lowestTime = null;
 let measuresArray = [];
 const players = {};
@@ -14,7 +15,7 @@ let playerClicked = null;
 let playerReady = null;
 let playerTimes = [];
 let startTime = null;
-let scoreArray = [];
+let winnerArray = [];
 
 function handleCompareClick() {
 	//Stop timer and count the difference from start to now, convert to seconds
@@ -38,17 +39,23 @@ function handleCompareClick() {
 		//find fastest click in array
 		lowestTime = Math.min(...playerTimes);
 
-		//Find the fastest time in array of users and times
-		let fastestPlayer = playerArray.find(player => {
-			return player.clickTime === lowestTime
+		//Find the fastest time in array of players push to winner else push to losers
+		playerArray.map(player => {
+			if(player.clickTime === lowestTime){
+				winnerArray.push(player);
+			}else{
+				loserArray.push(player);
+			}
 		});
 
-		//Push winner to array of all rounds
-		scoreArray.push(
-			fastestPlayer,
-		)
+		//create an object to be able to send both arrays to front end
+		const playerObject = {
+			winner: winnerArray,
+			loser: loserArray,
+		};
+
 		//emit and send winners with
-		io.emit('render-timeAndScore', scoreArray);
+		io.emit('render-timeAndScore', playerObject);
 	}
 }
 
@@ -58,7 +65,8 @@ function handleDisconnect() {
 	playerTimes = [];
 	playerArray = [];
 	playerClicked = 0;
-	scoreArray = [];
+	winnerArray = [];
+	loserArray = [];
 
 	// broadcast to all connected sockets that this player has left the chat
 	if (players[this.id]) {
