@@ -75,6 +75,8 @@ const handleTimer = () => {
 }
 
 const handlePlayerDisconnected = (player) => {
+	//stop timer
+	stopTimer();
 	//Empty array with score
 	playersScoreArray = [];
 	//empty rounds in DOM for the user not refreshing the page
