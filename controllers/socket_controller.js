@@ -129,11 +129,12 @@ function handleStartGame (measures) {
 		});
 
 		//Save random coordinats and time in object
+		//Made a litle "ful hack". Hard coded 50 wich is the size of the virus so it definitely stays inside the box.
 		const virusObject = {
-			topCoordinates: Math.floor(Math.random()*(smallestMeassures.height)),
-			bottomCoordinates: Math.floor(Math.random()*(smallestMeassures.height)),
-			rightCoordinates: Math.floor(Math.random()*(smallestMeassures.width)),
-			leftCoordinates: Math.floor(Math.random()*(smallestMeassures.width)),
+			topCoordinates: Math.floor(Math.random()*(smallestMeassures.height-50)),
+			bottomCoordinates: Math.floor(Math.random()*(smallestMeassures.height-50)),
+			rightCoordinates: Math.floor(Math.random()*(smallestMeassures.width-50)),
+			leftCoordinates: Math.floor(Math.random()*(smallestMeassures.width-50)),
 			setTime: Math.floor(Math.random()*5000),
 		};
 
@@ -145,7 +146,6 @@ function handleStartGame (measures) {
 		measuresArray = [];
 		io.emit('game-started', virusObject);
 	}
-
 }
 
 module.exports = function(socket) {

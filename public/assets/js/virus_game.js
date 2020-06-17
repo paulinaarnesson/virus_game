@@ -17,6 +17,7 @@ const wrapper = document.querySelector('#wrapper');
 
 //Array to save object with name of user and score
 let playersScoreArray = [];
+let runClock;
 
 const getMeasures = () => {
 	//Get game area size so the server can send the virus inside game area
@@ -38,19 +39,26 @@ const handleGameStarted = (virusObject) => {
 		virus.style.bottom = `${virusObject.bottomCoordinates}px`;
 		virus.style.right = `${virusObject.rightCoordinates}px`;
 		virus.style.left = `${virusObject.leftCoordinates}px`;
+
+		//Start timer
+		startTimer();
 	}, virusObject.setTime);
-	//Start timer
-	handleStartTimer();
 }
 
-const handleStartTimer = () => {
-	moment().set({
-		'hour': 00,
-		'minute': 00,
-		'second': 00,
-		'millisecond': 00
-	});
+const stopTimer = () => {
+	console.log('timer stopped');
+	clearInterval(runClock);
+}
 
+const startTimer = () => {
+	console.log('timer started');
+	runClock = setInterval(handleTimer, 10);
+}
+
+const handleTimer = () => {
+	let counter = 0;
+	console.log('handle timer', counter);
+	stopWatch.innerHTML = moment().minute(0).second(counter++).format('mm : ss : SSS');
 }
 
 const handlePlayerDisconnected = (player) => {
@@ -134,6 +142,7 @@ const updateOnlinePlayersAndStart = (players) => {
 virus.addEventListener('click', () => {
 	virus.classList.add('hide');
 	loading.classList.remove('hide');
+	stopTimer();
 	socket.emit('compare-click');
 });
 
