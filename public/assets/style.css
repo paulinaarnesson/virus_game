@@ -13,6 +13,11 @@ h1{
 	text-align: center;
 }
 
+h2{
+	color: white;
+	text-align: center;
+}
+
 .frontPageVirus{
 	height: auto;
 	margin-top: 15px;
@@ -37,6 +42,7 @@ h1{
 	box-shadow: 0 0 5px #949596, 0 0 5px;
 	height: 400px;
 	margin: 30px;
+	margin-top: 15px;
 	position: relative;
 	width: 600px;
 }
@@ -76,6 +82,7 @@ h1{
 	box-shadow: 0 0 5px #949596, 0 0 5px;
 	height: 400px;
 	margin: 30px;
+	margin-top: 15px;
 	margin-left: 0;
 	text-align: center;
 	width: 200px;

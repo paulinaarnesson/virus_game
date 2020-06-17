@@ -7,6 +7,7 @@ const debug = require('debug')('virus_game:socket_controller');
 //global variables
 let io = null;
 let lowestTime = null;
+let measuresArray = [];
 const players = {};
 let playerArray =[];
 let playerClicked = null;
@@ -104,6 +105,9 @@ function handleRegisterPlayer(player_name, callback) {
 }
 
 function handleStartGame (measures) {
+	//Push meassures to array
+	measuresArray.push(measures);
+
 	//New game so empty all variables
 	playerTimes = [];
 	playerArray = [];
@@ -116,12 +120,20 @@ function handleStartGame (measures) {
 
 	//Wait for two players to start game
 	if(onlinePlayers.length === playerReady) {
+		//When two players, use the meassures of the smallest screen
+		let smallestMeassures = measuresArray.reduce((prev, current) => {
+			return {
+				width: (prev.width < current.width) ? prev.width : current.width,
+				height: (prev.height < current.height) ? prev.height : current.height,
+			}
+		});
+
 		//Save random coordinats and time in object
 		const virusObject = {
-			topCoordinates: Math.floor(Math.random()*(measures.height)),
-			bottomCoordinates: Math.floor(Math.random()*(measures.height)),
-			rightCoordinates: Math.floor(Math.random()*(measures.width)),
-			leftCoordinates: Math.floor(Math.random()*(measures.width)),
+			topCoordinates: Math.floor(Math.random()*(smallestMeassures.height)),
+			bottomCoordinates: Math.floor(Math.random()*(smallestMeassures.height)),
+			rightCoordinates: Math.floor(Math.random()*(smallestMeassures.width)),
+			leftCoordinates: Math.floor(Math.random()*(smallestMeassures.width)),
 			setTime: Math.floor(Math.random()*5000),
 		};
 
@@ -129,6 +141,8 @@ function handleStartGame (measures) {
 		startTime = Date.now();
 		//clear
 		playerReady = 0;
+		smallestMeassures = null;
+		measuresArray = [];
 		io.emit('game-started', virusObject);
 	}
 

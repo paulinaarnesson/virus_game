@@ -11,6 +11,7 @@ const playerContainer = document.querySelector('#playerContainer');
 const player_name_form = document.querySelector('#player_name_form');
 const roundsContainer = document.querySelector('#roundsContainer');
 const sign_in = document.querySelector('#sign_in');
+const stopWatch = document.querySelector('#stopWatch');
 const virus = document.querySelector('#virus');
 const wrapper = document.querySelector('#wrapper');
 
@@ -38,6 +39,18 @@ const handleGameStarted = (virusObject) => {
 		virus.style.right = `${virusObject.rightCoordinates}px`;
 		virus.style.left = `${virusObject.leftCoordinates}px`;
 	}, virusObject.setTime);
+	//Start timer
+	handleStartTimer();
+}
+
+const handleStartTimer = () => {
+	moment().set({
+		'hour': 00,
+		'minute': 00,
+		'second': 00,
+		'millisecond': 00
+	});
+
 }
 
 const handlePlayerDisconnected = (player) => {
