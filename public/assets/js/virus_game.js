@@ -77,6 +77,9 @@ const handleTimer = () => {
 const handlePlayerDisconnected = (player) => {
 	//Empty array with score
 	playersScoreArray = [];
+	//empty rounds in DOM for the user not refreshing the page
+	roundsContainer.innerHTML = '';
+	thisRoundsContainer.innerHTML = '';
 	//Alert a message
 	alert(`Your opponent ${player} disconnected!`);
 	//And show first page
