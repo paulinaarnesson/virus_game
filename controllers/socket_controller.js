@@ -86,6 +86,11 @@ function getOnlinePlayers() {
 }
 
 function handleRegisterPlayer(player_name, callback) {
+	//If three or more players try to connect alert NO
+	if(getOnlinePlayers().length === 2){
+		this.emit('wait-player');
+		return;
+	}
 	//save player_name to players Object with socket.id as key
 	players[this.id] = player_name;
 	//Send back onlineplayers with joinGame so front end can render game area

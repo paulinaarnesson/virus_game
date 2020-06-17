@@ -72,6 +72,11 @@ const handleRenderWinner = (winner) => {
  	loading.classList.add('hide');
 }
 
+const handleWaitPlayer = () => {
+	//Alert when a third player or more trying to connect
+	alert('Sorry, there is already two players. Please try again later!');
+}
+
 const updateOnlinePlayersAndStart = (players) => {
 	//Empty old information in DOM
 	alertWinner.classList.add('hide');
@@ -145,4 +150,8 @@ socket.on('render-timeAndScore', (differenceTime) => {
 
 socket.on('render-winner', (winner) => {
 	handleRenderWinner(winner);
+});
+
+socket.on('wait-player', () => {
+	handleWaitPlayer();
 });
