@@ -76,9 +76,9 @@ function handleFindWinner(playersScoreArray){
 	//find winner with highest score or equal
 	winner = playersScoreArray.reduce( (prev, current) => {
 		if(prev.score > current.score){
-			return `Congrats!!! The winner is: ${prev.name}!`;
+			return `The winner is: ${prev.name}!`;
 		}else if(prev.score < current.score){
-			return `Congrats!!! The winner is: ${current.name}!`;
+			return `The winner is: ${current.name}!`;
 		}else if(prev.score === current.score){
 			return `Congrats!!! You both are winners!`
 		}
